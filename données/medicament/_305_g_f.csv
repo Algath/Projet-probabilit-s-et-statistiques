@@ -1,0 +1,71 @@
+﻿;;;;;;
+"Consommation chronique de médicaments";;;;;;
+;;;;;;
+"par sexe";;;;;;
+"Proportion de la population ayant consommé presque quotidiennement des analgésiques, des somnifères ou des tranquillisants au cours des 30 derniers jours";;;;;;
+;;;;;;
+"Renseignements: +41 58 463 60 45, obsan@bfs.admin.ch";;;;;;
+"";;;;;;
+"Source: OFSP – Enquête « Santé et Lifestyle » (depuis 2018), Monitorage suisse des addictions – CoRolAR (2011–2016)";;;;;;
+"Les données sont représentées avec un intervalle de confiance de 95%. Les intervalles d’erreur illustrés contiennent avec une probabilité de 95% la valeur réelle dans la population.";;;;;;
+"Rupture de la série chronologique entre 2016 et 2018: l’enquête « Santé et Lifestyle » a été réalisée en ligne, tandis que l’enquête CoRoIAR a été menée par téléphone. ";;;;;;
+"Rupture de la série chronologique entre 2018 et 2022: à partir de 2022, les questions contiennent des exemples de somnifères et de tranquillisants, ce qui n'était pas le cas dans les enquêtes précédentes. Durant les années 2011 à 2016, la question sur les analgésiques précisait qu'elle ne portait pas sur les médicaments usuels contre les maux de tête comme l’Aspirine ou le paracétamol, sans toutefois mentionner d'autres exemples de médicaments. Il n'est pas possible de présenter de données sur la prise d’analgésique pour l’année 2018.";;;;;;
+"n = taille de l'échantillon";;;;;;
+"Les résultats comptant moins de 5 cas ne sont pas affichés.";;;;;;
+;;;;;;
+;;;;;;
+"URL:";"https://ind.obsan.admin.ch/fr/indicator/monam/consommation-chronique-de-medicaments-age-15";;;;;
+"Erstellt am:";"24/10/2025";;;;;
+;;;;;;
+"year";"sex";"category";"var1";"lci1";"uci1";"var2"
+2011;"Total";"Analgésiques";2.07899994846;1.72296423106;2.43503566586;10967
+2011;"Hommes";"Analgésiques";1.40480626931;0.948658799279;1.86095373934;4812
+2011;"Femmes";"Analgésiques";2.72497329578;2.1828822653;3.26706432625;6155
+2011;"Total";"Somnifères ou tranquillisants";3.45893196226;2.99140937491;3.92645454962;10985
+2011;"Hommes";"Somnifères ou tranquillisants";2.49592532098;1.86547461436;3.12637602759;4821
+2011;"Femmes";"Somnifères ou tranquillisants";4.38119030524;3.69473673366;5.06764387682;6164
+2012;"Total";"Analgésiques";2.21935423306;1.79939990554;2.63930856059;11115
+2012;"Hommes";"Analgésiques";1.85057026853;1.27668354692;2.42445699015;4990
+2012;"Femmes";"Analgésiques";2.57153264489;1.96082512678;3.182240163;6125
+2012;"Total";"Somnifères ou tranquillisants";2.9625892703;2.52403686742;3.40114167317;11144
+2012;"Hommes";"Somnifères ou tranquillisants";1.82918145618;1.34122033809;2.31714257427;5001
+2012;"Femmes";"Somnifères ou tranquillisants";4.044663543;3.32895120788;4.76037587813;6143
+2013;"Total";"Analgésiques";2.56290141882;2.11156325705;3.0142395806;11310
+2013;"Hommes";"Analgésiques";2.36464153221;1.70570406837;3.02357899605;5185
+2013;"Femmes";"Analgésiques";2.75225282385;2.13381578866;3.37068985903;6125
+2013;"Total";"Somnifères ou tranquillisants";3.50641112415;3.00316644564;4.00965580266;11329
+2013;"Hommes";"Somnifères ou tranquillisants";2.65160185148;1.98983510148;3.31336860149;5205
+2013;"Femmes";"Somnifères ou tranquillisants";4.32592109363;3.5733316079;5.07851057936;6124
+2014;"Total";"Analgésiques";2.45076283813;2.08868838335;2.8128372929;11423
+2014;"Hommes";"Analgésiques";2.06356771314;1.54957829329;2.57755713299;5346
+2014;"Femmes";"Analgésiques";2.82428298716;2.31425685209;3.33430912223;6077
+2014;"Total";"Somnifères ou tranquillisants";3.29907057655;2.87686448271;3.72127667038;11442
+2014;"Hommes";"Somnifères ou tranquillisants";2.20158902842;1.61214064314;2.7910374137;5348
+2014;"Femmes";"Somnifères ou tranquillisants";4.35473532689;3.75051320325;4.95895745052;6094
+2015;"Total";"Analgésiques";2.11090242309;1.80254337596;2.41926147022;11153
+2015;"Hommes";"Analgésiques";1.60986259682;1.25677243344;1.96295276021;5268
+2015;"Femmes";"Analgésiques";2.59710000406;2.0965389746;3.09766103352;5885
+2015;"Total";"Somnifères ou tranquillisants";2.4800964806;2.17081392726;2.78937903394;11179
+2015;"Hommes";"Somnifères ou tranquillisants";1.79827487158;1.41378211081;2.18276763235;5287
+2015;"Femmes";"Somnifères ou tranquillisants";3.14355469045;2.6623858888;3.6247234921;5892
+2016;"Total";"Analgésiques";1.93558458528;1.62844137239;2.24272779817;10961
+2016;"Hommes";"Analgésiques";1.57701361002;1.2305745757;1.92345264435;5231
+2016;"Femmes";"Analgésiques";2.28426319102;1.78178273798;2.78674364407;5730
+2016;"Total";"Somnifères ou tranquillisants";3.06467273999;2.64608292699;3.483262553;10975
+2016;"Hommes";"Somnifères ou tranquillisants";2.05972444029;1.51003926896;2.60940961163;5239
+2016;"Femmes";"Somnifères ou tranquillisants";4.04196700224;3.41375457887;4.67017942562;5736
+2018;"Total";"Somnifères ou tranquillisants";2.13719925757;1.71667688433;2.55772163081;5510
+2018;"Hommes";"Somnifères ou tranquillisants";1.99707763118;1.43611551567;2.5580397467;2744
+2018;"Femmes";"Somnifères ou tranquillisants";2.27303636266;1.64847697223;2.89759575308;2766
+2022;"Total";"Analgésiques";0.875224461559;0.591107654992;1.15934126813;5387
+2022;"Hommes";"Analgésiques";1.16107352038;0.711108247387;1.61103879337;2593
+2022;"Femmes";"Analgésiques";0.596337859096;0.246793352318;0.945882365874;2794
+2022;"Total";"Somnifères ou tranquillisants";2.09504963208;1.67460116885;2.5154980953;5390
+2022;"Hommes";"Somnifères ou tranquillisants";1.62685831772;1.08656623348;2.16715040197;2593
+2022;"Femmes";"Somnifères ou tranquillisants";2.55127726057;1.90992828388;3.19262623727;2797
+2024;"Total";"Analgésiques";0.643444916487;0.416950827101;0.869939005873;6070
+2024;"Hommes";"Analgésiques";0.732595940023;0.385580111733;1.07961176831;2982
+2024;"Femmes";"Analgésiques";0.556043574502;0.263780167214;0.84830698179;3088
+2024;"Total";"Somnifères ou tranquillisants";1.8309075296;1.44141154224;2.22040351696;6070
+2024;"Hommes";"Somnifères ou tranquillisants";1.13092599966;0.705283574047;1.55656842526;2983
+2024;"Femmes";"Somnifères ou tranquillisants";2.51747205531;1.87021449947;3.16472961115;3087
