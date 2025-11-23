@@ -1,4 +1,4 @@
-using HypertextLiteral, CSV, DataFrames, XLSX, PyPlot
+using HypertextLiteral, CSV, DataFrames, XLSX, PyPlot, StatsBase
 
 pygui(false)
 
@@ -39,6 +39,20 @@ function print_atc_descriptions(df_ATC)
 		println("  $i. $desc")
 	end
 	println("========================================\n")
+end
+# Fonction pour vérifier si un code ATC correspond à un code de référence (correspondance hiérarchique)
+function matches_atc_reference(code_medic, codes_ref)
+    ismissing(code_medic) && return false
+    code_str = strip(string(code_medic))
+    
+    for ref_code in codes_ref
+        ref_str = strip(string(ref_code))
+        # Si le code du médicament commence par le code de référence, c'est une correspondance
+        if startswith(code_str, ref_str)
+            return true
+        end
+    end
+    return false
 end
 
 df_ATC_KPA = DataFrame(XLSX.readtable("données/medicament/classification du code ATC et les groupes IT KPA.xlsx", 1, first_row=7))
@@ -105,7 +119,7 @@ safe_rename!(df_ATC_KPA, rename_dict_1, "df_ATC_KPA")
 # Méthode 1 : Remplacer directement dans le DataFrame
 df_ATC_KPA.description_atc = [get(traductions_1, desc, desc) for desc in df_ATC_KPA.description_atc]
 # Créer un Set des codes ATC de référence
-codes_atc_reference = Set(df_ATC_KPA.code_atc)
+
 
 rename_dict_2 = Dict(
 	    "Zulassungs-\nnummer\n\nN° d'autorisation" => :numero_autorisation,
@@ -132,7 +146,7 @@ rename_dict_2 = Dict(
 	    "Verz. bei betäubungsmittelhaltigen Arzneimitteln **\n\nN° du tabl. Si médicaments à base de stupéfiants **" => :numero_stupefiants,
 	    "Besondere Angaben\n\n\nIndications particulières" => :indications_particulieres,
 	    "Zulassungsstatus\n\n\nStatut d'autorisation" => :statut_autorisation,
-	    "Befristet zugelassene Indikation(en) / Ablauf Datum\n\nIndication(s) autorisée(s) pour une durée limitée / date d'expiration" => :indications_duree_limitee
+	    "Befristet zugelassene Indikation(en) / Ablauf Datum\n\nIndication(s) autorisée(s) pour une durée limitée / date d’expiration" => :indications_duree_limitee
 	)
 	
 	# Utiliser avec votre dictionnaire
@@ -144,11 +158,11 @@ rename_dict_3 = Dict(
     "Orphan Drug Status \ngem. Art.14 Abs.1 Bst.f HMG, Art.4, 5, 24-26 VAZV\nverliehen für folgende Indikation(en)\n\nStatut de médicament orphelin \nselon l'art.14, al.1, let.f LPTh et les art.4, 5, 24 à 26 OASMéd \naccordé pour la ou les indication(s) suivant(es)" => :statut_orphan_drug,
     "Status verliehen am\n\n\nStatut accordé le" => :date_statut_accorde,
     "Status entzogen / verzichtet am\n\n\nStatut retiré / renoncé le" => :date_statut_retire,
-    "Zulassungs-status des Arzneimittels\n\nStatut d'autorisation du médicament" => :statut_autorisation_medicament,
+    "Zulassungs-status des Arzneimittels\n\nStatut d’autorisation du médicament" => :statut_autorisation_medicament,
     "Zulassungs-nummer\n\n\nNuméro d'autorisation" => :numero_autorisation,
     "Bezeichnung des Arzneimittels \n\n\n\nDénomination du médicament" => :denomination_medicament,
     "Zulassungs-datum \n\n\nDate d'autorisation" => :date_autorisation,
-    "Befristete Zulassung bis\n\n\nAutorisation à durée limitée, valable jusque'au" => :autorisation_duree_limitee_jusquau,
+    "Befristete Zulassung bis\n\n\nAutorisation à durée limitée, valable jusque’au" => :autorisation_duree_limitee_jusquau,
     "Zugelassenes Anwendungsgebiet (siehe aktuelle Fachinformation für vollständige Angaben zur Indikation)\n\n\nChamp d'application autorisé (cf. information professionnelle actuelle pour des informations complètes sur la ou les indication(s))" => :champ_application_autorise
 )
 safe_rename!(df_ListMedicOrphan, rename_dict_3, "df_ListMedicOrphan")
@@ -415,14 +429,69 @@ traductions_2 = Dict(
 
 df_ATC.description_atc = [get(traductions_2, desc, desc) for desc in df_ATC.description_atc]
 
-# Filtrer directement avec subset
+codes_atc_reference = Set(vcat(df_ATC_KPA.code_atc, df_ATC.code_atc))
+
+# Filtrer avec correspondance hiérarchique
 df_ListMedicIndic_filtre = subset(df_ListMedicIndic, 
-									:code_atc => ByRow(x -> x in codes_atc_reference))
-# df_ListMedicOrphan_filtre = subset(df_ListMedicOrphan, :code_atc => ByRow(x -> x in codes_atc_reference))
-# df_MedicIndic_filtre = subset(df_MedicIndic, :code_atc => ByRow(x -> x in codes_atc_reference))
+									:code_atc => ByRow(x -> matches_atc_reference(x, codes_atc_reference)))
+# df_ListMedicOrphan_filtre = subset(df_ListMedicOrphan, :code_atc => ByRow(x -> matches_atc_reference(x, codes_atc_reference)))
+# df_MedicIndic_filtre = subset(df_MedicIndic, :code_atc => ByRow(x -> matches_atc_reference(x, codes_atc_reference)))
 df_MedicDureeLimite_filtre = subset(df_MedicDureeLimite, 
-									:code_atc => ByRow(x -> x in codes_atc_reference))
+									:code_atc => ByRow(x -> matches_atc_reference(x, codes_atc_reference)))
+
 println("$(nrow(df_ListMedicIndic_filtre)) médicaments correspondent aux codes ATC de référence dans df_ListMedicIndic_filtre")
 #println("$(nrow(df_ListMedicOrphan_filtre)) médicaments correspondent aux codes ATC de référence")
 #println("$(nrow(df_MedicIndic_filtre)) médicaments correspondent aux codes ATC de référence")
 println("$(nrow(df_MedicDureeLimite_filtre)) médicaments correspondent aux codes ATC de référence dans df_MedicDureeLimite_filtre")
+
+# Table de correspondance ATC → Causes de mortalité
+correspondance_atc_mortalite = Dict(
+    # Maladies infectieuses (sans COVID-19)
+    "maladie_infectieuses" => ["J", "J01", "J02", "J04", "J05", "P01", "P02", "P03", "D06", "S01A"],
+    
+    # Cancer (tumeurs)
+    "cancer" => ["L", "L01", "L02", "L03", "L04"],
+    
+    # Appareil circulatoire
+    "appareil_circulatoire" => ["C", "C01", "C02", "C03", "C04", "C05", "C07", "C08", "C09", "C10", "B01"],
+    
+    # Appareil respiratoire
+    "appareil_respiratoire" => ["R", "R01", "R02", "R03", "R05", "R06", "R07"]
+)
+
+# Fonction pour classifier un médicament selon sa cause de mortalité
+function get_cause_mortalite(code_atc, correspondance)
+    ismissing(code_atc) && return missing
+    code_str = strip(string(code_atc))
+    
+    for (cause, codes_atc) in correspondance
+        for ref_code in codes_atc
+            if startswith(code_str, ref_code)
+                return cause
+            end
+        end
+    end
+    return "autre"
+end
+
+# Ajouter la cause de mortalité aux DataFrames filtrés
+df_ListMedicIndic_filtre.cause_mortalite = [get_cause_mortalite(code, correspondance_atc_mortalite) 
+                                             for code in df_ListMedicIndic_filtre.code_atc]
+
+df_MedicDureeLimite_filtre.cause_mortalite = [get_cause_mortalite(code, correspondance_atc_mortalite) 
+                                               for code in df_MedicDureeLimite_filtre.code_atc]
+
+# Afficher la répartition par cause de mortalité
+println("\n========================================")
+println("RÉPARTITION DES MÉDICAMENTS PAR CAUSE DE MORTALITÉ")
+println("========================================")
+println("\ndf_ListMedicIndic_filtre:")
+for (cause, count) in sort(collect(pairs(countmap(df_ListMedicIndic_filtre.cause_mortalite))), by=x->x[2], rev=true)
+    println("  • $cause: $count médicaments")
+end
+
+println("\ndf_MedicDureeLimite_filtre:")
+for (cause, count) in sort(collect(pairs(countmap(df_MedicDureeLimite_filtre.cause_mortalite))), by=x->x[2], rev=true)
+    println("  • $cause: $count médicaments")
+end
+println("========================================\n")
