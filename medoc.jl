@@ -495,3 +495,7 @@ for (cause, count) in sort(collect(pairs(countmap(df_MedicDureeLimite_filtre.cau
     println("  • $cause: $count médicaments")
 end
 println("========================================\n")
+
+
+CSV.write("output/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
+CSV.write("output/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre)
