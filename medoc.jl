@@ -152,35 +152,6 @@ rename_dict_2 = Dict(
 	# Utiliser avec votre dictionnaire
 safe_rename!(df_ListMedicIndic, rename_dict_2, "df_ListMedicIndic")
 
-rename_dict_3 = Dict(
-    "Wirkstoff(e)\n\n\n\nPrincipe(s) actif(s)" => :principes_actifs,
-    "Gesuchstellerin /\nZulassungsinhaberin\n\n\nRequérant /\nTitulaire de l'autorisation" => :requerant_titulaire,
-    "Orphan Drug Status \ngem. Art.14 Abs.1 Bst.f HMG, Art.4, 5, 24-26 VAZV\nverliehen für folgende Indikation(en)\n\nStatut de médicament orphelin \nselon l'art.14, al.1, let.f LPTh et les art.4, 5, 24 à 26 OASMéd \naccordé pour la ou les indication(s) suivant(es)" => :statut_orphan_drug,
-    "Status verliehen am\n\n\nStatut accordé le" => :date_statut_accorde,
-    "Status entzogen / verzichtet am\n\n\nStatut retiré / renoncé le" => :date_statut_retire,
-    "Zulassungs-status des Arzneimittels\n\nStatut d’autorisation du médicament" => :statut_autorisation_medicament,
-    "Zulassungs-nummer\n\n\nNuméro d'autorisation" => :numero_autorisation,
-    "Bezeichnung des Arzneimittels \n\n\n\nDénomination du médicament" => :denomination_medicament,
-    "Zulassungs-datum \n\n\nDate d'autorisation" => :date_autorisation,
-    "Befristete Zulassung bis\n\n\nAutorisation à durée limitée, valable jusque’au" => :autorisation_duree_limitee_jusquau,
-    "Zugelassenes Anwendungsgebiet (siehe aktuelle Fachinformation für vollständige Angaben zur Indikation)\n\n\nChamp d'application autorisé (cf. information professionnelle actuelle pour des informations complètes sur la ou les indication(s))" => :champ_application_autorise
-)
-safe_rename!(df_ListMedicOrphan, rename_dict_3, "df_ListMedicOrphan")
-
-rename_dict_4 = Dict(
-    "Zulassungs-\nnummer\n\nN° d'autorisation" => :numero_autorisation,
-    "Dosisstärke-nummer \n\nN° \nde dosage" => :numero_dosage,
-    "Bezeichnung des Arzneimittels\n\n\nDénomination du médicament" => :denomination_medicament,
-    "Zulassungsinhaberin\n\n\nTitulaire de l'autorisation" => :titulaire_autorisation,
-    "Heilmittelcode\n\n\nCatégorie du médicament " => :categorie_medicament,
-    "Abgabekategorie Dosisstärke \n\nCat. de remise du dosage" => :categorie_remise_dosage,
-    "Abgabekategorie Arzneimittel\n\nCat. de remise du médicament" => :categorie_remise_medicament,
-    "Erstzulassungs-datum Arzneimittel\n\nDate de première autorisation du médicament" => :date_premiere_autorisation,
-    "Zul.datum Dosisstärke \n\nDate d'autorisation du dosage" => :date_autorisation_dosage,
-    "Gültigkeitsdauer der Zulassung *\n\nDurée de validité de l'AMM *" => :duree_validite_amm
-)
-safe_rename!(df_MedicIndic, rename_dict_4, "df_MedicIndic")
-
 rename_dict_5 = Dict(
     "Zulassungs-\nnummer\n\nN° d'autorisation" => :numero_autorisation,
     "Dosisstärke-nummer \n\nN° de dosage" => :numero_dosage,
@@ -497,5 +468,5 @@ end
 println("========================================\n")
 
 
-CSV.write("output/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
-CSV.write("output/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre)
+CSV.write("output/df_filtre/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
+CSV.write("output/df_filtre/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre)
