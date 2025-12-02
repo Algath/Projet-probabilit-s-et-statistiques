@@ -67,7 +67,9 @@ df_infectieuxes = joindre_par_annee(df_ListMedicIndic_infectieuses, df_MedicDure
 df_circulatoire = joindre_par_annee(df_ListMedicIndic_circulatoire, df_MedicDureeLimite_circulatoire)
 df_respiratoire = joindre_par_annee(df_ListMedicIndic_respiratoire, df_MedicDureeLimite_respiratoire)
 
-CSV.write("output/df_quantity/df_cancer_par_annee.csv", df_cancer)
+#= CSV.write("output/df_quantity/df_cancer_par_annee.csv", df_cancer)
 CSV.write("output/df_quantity/df_infectieuses_par_annee.csv", df_infectieuxes)
 CSV.write("output/df_quantity/df_circulatoire_par_annee.csv", df_circulatoire)
-CSV.write("output/df_quantity/df_respiratoire_par_annee.csv", df_respiratoire)
+CSV.write("output/df_quantity/df_respiratoire_par_annee.csv", df_respiratoire) =#
+println("DataFrame des médicaments liés au cancer par année :")
+df_cancer

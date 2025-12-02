@@ -468,5 +468,5 @@ end
 println("========================================\n")
 
 
-CSV.write("output/df_filtre/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
-CSV.write("output/df_filtre/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre)
+#= CSV.write("output/df_filtre/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
+CSV.write("output/df_filtre/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre) =#
