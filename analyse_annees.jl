@@ -1,4 +1,4 @@
-using CSV, DataFrames
+include("imports_analyse_annees.jl")
 
 # Fonction pour extraire l'année d'une date
 function extraire_annee(date_str)

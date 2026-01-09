@@ -1,4 +1,4 @@
-using HypertextLiteral, CSV, DataFrames, XLSX, PyPlot, StatsBase
+include("imports_years_quantity.jl")
 
 pygui(false)
 

@@ -1,4 +1,4 @@
-using HypertextLiteral, CSV, DataFrames, XLSX, PyPlot, StatsBase
+include("imports_medoc.jl")
 
 pygui(false)
 
@@ -470,3 +470,28 @@ println("========================================\n")
 
 #= CSV.write("output/df_filtre/df_ListMedicIndic_filtre.csv", df_ListMedicIndic_filtre)
 CSV.write("output/df_filtre/df_MedicDureeLimite_filtre.csv", df_MedicDureeLimite_filtre) =#
+
+atc_ListMedicIndic = nrow(df_ListMedicIndic) - nrow(df_ListMedicIndic_filtre)
+atc_MedicDureeLimite = nrow(df_MedicDureeLimite) - nrow(df_MedicDureeLimite_filtre)
+
+causes_ListMedicIndic = countmap(df_ListMedicIndic_filtre.cause_mortalite)
+causes_MedicDureeLimite = countmap(df_MedicDureeLimite_filtre.cause_mortalite)
+
+pct_exclu_ListMedicIndic = round(100 * atc_ListMedicIndic / nrow(df_ListMedicIndic), digits=2)
+pct_exclu_MedicDureeLimite = round(100 * atc_MedicDureeLimite / nrow(df_MedicDureeLimite), digits=2)
+
+println("Nombre de médicaments exclus de df_ListMedicIndic en raison de l'absence de correspondance ATC: $atc_ListMedicIndic ($pct_exclu_ListMedicIndic%)")
+println("Nombre de médicaments exclus de df_MedicDureeLimite en raison de l'absence de correspondance ATC: $atc_MedicDureeLimite ($pct_exclu_MedicDureeLimite%)")
+
+println("\nRépartition des causes de mortalité dans df_ListMedicIndic_filtre:")
+total_ListMedicIndic = nrow(df_ListMedicIndic_filtre)
+for (cause, count) in sort(collect(pairs(causes_ListMedicIndic)), by=x->x[2], rev=true)
+    pct = round(100 * count / total_ListMedicIndic, digits=2)
+    println("  • $cause: $count médicaments ($pct%)")
+end
+println("\nRépartition des causes de mortalité dans df_MedicDureeLimite_filtre:")
+total_MedicDureeLimite = nrow(df_MedicDureeLimite_filtre)
+for (cause, count) in sort(collect(pairs(causes_MedicDureeLimite)), by=x->x[2], rev=true)
+    pct = round(100 * count / total_MedicDureeLimite, digits=2)
+    println("  • $cause : $count médicaments ($pct%)")
+end
