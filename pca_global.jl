@@ -1,4 +1,4 @@
-include("imports_pollution.jl")
+include("imports/imports_pca_global.jl")
 
 function safe_rename!(df::DataFrame, old::String, new::String)
     if old ∈ names(df)
@@ -239,8 +239,8 @@ end
 
 df_correlations = DataFrame(cor_results)
 sort!(df_correlations, :Corrélation, rev=true)
-CSV.write("output/correlations_deces_autres.csv", df_correlations)
-println("✓ Corrélations sauvegardées dans output/correlations_deces_autres.csv")
+CSV.write("output/pca_global/correlations_deces_autres.csv", df_correlations)
+println("✓ Corrélations sauvegardées dans output/pca_global/correlations_deces_autres.csv")
 
 # Afficher les corrélations les plus fortes
 println("\n📊 TOP 10 CORRÉLATIONS LES PLUS FORTES:")
@@ -271,13 +271,15 @@ p_heatmap = heatmap(other_labels, death_labels, cor_subset,
     title="Corrélations: Décès vs Médicaments/Pollution/Radiation",
     color=:RdBu,
     clim=(-1, 1),
-    size=(900, 500),
+    size=(900, 550),
     xrotation=45,
+    bottom_margin=15Plots.mm,
+    left_margin=10Plots.mm,
     annotate=[(j, i, text(string(round(cor_subset[i,j], digits=2)), 8, :black)) 
               for i in 1:length(death_labels), j in 1:length(other_labels)]
 )
-savefig(p_heatmap, "output/correlation_heatmap.png")
-println("\n✓ Heatmap des corrélations sauvegardée dans output/correlation_heatmap.png")
+savefig(p_heatmap, "output/pca_global/correlation_heatmap.png")
+println("\n✓ Heatmap des corrélations sauvegardée dans output/pca_global/correlation_heatmap.png")
 
 # 10.2 Biplot avec interprétation des PC
 p_biplot = plot(
@@ -340,8 +342,8 @@ for (i, col) in enumerate(numeric_cols)
     )
 end
 
-savefig(p_biplot, "output/pca_biplot_interpretation.png")
-println("✓ Biplot interprété sauvegardé dans output/pca_biplot_interpretation.png")
+savefig(p_biplot, "output/pca_global/pca_biplot_interpretation.png")
+println("✓ Biplot interprété sauvegardé dans output/pca_global/pca_biplot_interpretation.png")
 
 # 10.3 Évolution temporelle des PC
 p_temporal = plot(layout=(n_pc, 1), size=(1200, 350*n_pc), 
@@ -374,8 +376,8 @@ for pc in 1:n_pc
     hline!(p_temporal[pc], [0], linestyle=:dash, color=:gray, label="")
 end
 
-savefig(p_temporal, "output/pca_temporal_evolution.png")
-println("✓ Évolution temporelle sauvegardée dans output/pca_temporal_evolution.png")
+savefig(p_temporal, "output/pca_global/pca_temporal_evolution.png")
+println("✓ Évolution temporelle sauvegardée dans output/pca_global/pca_temporal_evolution.png")
 
 # 10.4 Graphique de contribution des variables à chaque PC
 p_loadings = plot(layout=(1, n_pc), size=(500*n_pc, 700), 
@@ -434,8 +436,8 @@ p_loadings_final = plot(p_loadings, p_legend_colors,
     size=(500*n_pc + 200, 700)
 )
 
-savefig(p_loadings_final, "output/pca_loadings_bars.png")
-println("✓ Graphique des loadings sauvegardé dans output/pca_loadings_bars.png")
+savefig(p_loadings_final, "output/pca_global/pca_loadings_bars.png")
+println("✓ Graphique des loadings sauvegardé dans output/pca_global/pca_loadings_bars.png")
 
 # ============================================
 # ÉTAPE 11: Sauvegarder les résultats
@@ -450,16 +452,16 @@ df_loadings = DataFrame(
 for pc in 1:n_pc
     df_loadings[!, "PC$pc"] = round.(loadings_matrix[:, pc], digits=4)
 end
-CSV.write("output/pca_loadings.csv", df_loadings)
-println("✓ Loadings sauvegardés dans output/pca_loadings.csv")
+CSV.write("output/pca_global/pca_loadings.csv", df_loadings)
+println("✓ Loadings sauvegardés dans output/pca_global/pca_loadings.csv")
 
 # Projections par année
 df_projections = DataFrame(year = years_all)
 for pc in 1:n_pc
     df_projections[!, "PC$pc"] = Y_all[pc, :]
 end
-CSV.write("output/pca_projections.csv", df_projections)
-println("✓ Projections sauvegardées dans output/pca_projections.csv")
+CSV.write("output/pca_global/pca_projections.csv", df_projections)
+println("✓ Projections sauvegardées dans output/pca_global/pca_projections.csv")
 
 # Résumé des PC
 println("\n" * "="^70)

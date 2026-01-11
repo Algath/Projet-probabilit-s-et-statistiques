@@ -1,0 +1,5 @@
+Circulatoire,Variable,Respiratoire,Infectieux,Cancer
+-0.912,death_pm25,-0.9097,-0.9242,-0.9266
+-0.9456,pm10_immission,-0.9417,-0.957,-0.9531
+-0.9819,pm10_emission,-0.9503,-0.9646,-0.9765
+0.6719,rad_mean,0.704,0.6867,0.6872

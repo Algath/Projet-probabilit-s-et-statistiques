@@ -1,4 +1,4 @@
-include("setup.jl")
+include("../setup.jl")
 
 using CSV
 using DataFrames
