@@ -1,0 +1,13 @@
+Variable,Catégorie,Description,PC1,PC2,PC3,PC4
+death_circulatoire,Décès,Décès maladies circulatoires,-0.912,-0.0392,-0.2613,-0.0334
+death_respiratoire,Décès,Décès maladies respiratoires,0.3441,0.06,-0.8998,-0.1981
+death_cancer,Décès,Décès par cancer,0.9491,0.1706,-0.0377,-0.166
+death_infectieux,Décès,Décès maladies infectieuses,0.8595,0.3334,-0.1556,0.0059
+med_cancer,Médicaments,Nb médicaments cancer,0.8992,0.014,0.036,0.2836
+med_circulatoire,Médicaments,Nb médicaments circulatoires,0.53,-0.6257,0.1377,-0.1884
+med_infectieux,Médicaments,Nb médicaments infectieux,0.5075,-0.6861,-0.1227,-0.238
+med_respiratoire,Médicaments,Nb médicaments respiratoires,0.7551,-0.3178,-0.0051,0.2594
+rad_mean,Radiation,Radiation solaire (W/m²),0.7072,-0.1209,-0.2546,0.5557
+death_pm25,Décès (PM2.5),Décès attribuables aux PM2.5,-0.8943,-0.2425,-0.1283,0.2473
+pm10_immission_mean,Particules (immission),Concentration PM10 (µg/m³),-0.9363,-0.1762,-0.1381,0.2091
+pm10_emission,Particules (émission),Émissions PM10,-0.9662,-0.1097,-0.1424,0.0167

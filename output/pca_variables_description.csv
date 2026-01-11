@@ -1,0 +1,13 @@
+Variable,Catégorie,Description
+death_circulatoire,Décès,Décès maladies circulatoires
+death_respiratoire,Décès,Décès maladies respiratoires
+death_cancer,Décès,Décès par cancer
+death_infectieux,Décès,Décès maladies infectieuses
+med_cancer,Médicaments,Nb médicaments cancer autorisés
+med_circulatoire,Médicaments,Nb médicaments circulatoires autorisés
+med_infectieux,Médicaments,Nb médicaments infectieux autorisés
+med_respiratoire,Médicaments,Nb médicaments respiratoires autorisés
+rad_mean,Radiation,Radiation solaire moyenne (W/m²)
+death_pm25,Décès (PM2.5),Décès attribuables aux PM2.5
+pm10_immission_mean,Particules (immission),Concentration PM10 dans l'air (µg/m³)
+pm10_emission,Particules (émission),Émissions PM10 territoriales

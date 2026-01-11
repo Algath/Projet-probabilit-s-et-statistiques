@@ -13,4 +13,11 @@ Pkg.add("XLSX")
 Pkg.add("PyPlot")
 Pkg.add("StatsBase")
 
+# Packages supplémentaires pour pollution.jl
+Pkg.add("MultivariateStats")
+Pkg.add("RDatasets")
+Pkg.add("Plots")
+Pkg.add("Statistics")
+Pkg.add("StatsBase")
+
 println("✓ Tous les packages ont été installés avec succès!")
