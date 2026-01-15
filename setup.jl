@@ -12,6 +12,7 @@ Pkg.add("HypertextLiteral")
 Pkg.add("XLSX")
 Pkg.add("PyPlot")
 Pkg.add("StatsBase")
+Pkg.add("Dates")
 
 # Packages supplémentaires pour pca_global.jl
 Pkg.add("MultivariateStats")

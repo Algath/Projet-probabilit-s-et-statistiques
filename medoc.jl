@@ -1,4 +1,4 @@
-include("imports_medoc.jl")
+include("imports/imports_medoc.jl")
 
 pygui(false)
 
@@ -122,34 +122,34 @@ df_ATC_KPA.description_atc = [get(traductions_1, desc, desc) for desc in df_ATC_
 
 
 rename_dict_2 = Dict(
-	    "Zulassungs-\nnummer\n\nN° d'autorisation" => :numero_autorisation,
-	    "Dosisstärke-nummer \n\nN° de dosage" => :numero_dosage,
-	    "Bezeichnung des Arzneimittels\n\n\nDénomination du médicament" => :denomination_medicament,
-	    "Zulassungsinhaberin\n\n\nTitulaire de l'autorisation" => :titulaire_autorisation,
-	    "Zulassungsart\n\n\nType d'autorisation" => :type_autorisation,
-	    "Heilmittelcode\n\n\nCatégorie du médicament " => :categorie_medicament,
-	    "Verfahren nach Art. 14 Abs. 1 Bst. abis-quater HMG\n\nProcédures selon l'art.14, al.1, let.abis-quater LPTh" => :procedure_art14,
-	    "IT-Nummer\n\n\nNo IT " => :numero_it,
-	    "ATC-Code\n\n\nCode ATC" => :code_atc,
-	    "Erstzulassungs-datum Arzneimittel\nDate de première autorisation du médicament" => :date_premiere_autorisation,
-	    "Zul.datum Dosisstärke \n\nDate d'autorisation du dosage" => :date_autorisation_dosage,
-	    "Gültigkeitsdauer der Zulassung * \n\nDurée de validité de l'AMM *" => :duree_validite_amm,
-	    "Abgabekategorie Dosisstärke \n\nCat. de remise du dosage" => :categorie_remise_dosage,
-	    "Abgabekategorie Arzneimittel\n\nCat. de remise du médicament" => :categorie_remise_medicament,
-	    "Wirkstoff(e)\n\n\nPrincipe(s) actif(s)" => :principes_actifs,
-	    "Zusammensetzung\n\n\nComposition" => :composition,
-	    "Volldeklaration rev. AMZV umgesetzt\n\nDéclaration complète OEMéd rév. implémentée" => :declaration_complete,
-	    "Anwendungsgebiet Arzneimittel\n\n\nChamp d'application du médicament" => :champ_application_medicament,
-	    "Anwendungsgebiet Dosisstärke\n\n\nChamp d'application du dosage" => :champ_application_dosage,
-	    "Gentechnisch hergestellte Wirkstoffe\n\nPrincipes actifs produits par génie génétique" => :principes_actifs_genie_genetique,
-	    "Kategorie bei Insulinen\n\n\nCatégorie en cas d'insuline" => :categorie_insuline,
-	    "Verz. bei betäubungsmittelhaltigen Arzneimitteln **\n\nN° du tabl. Si médicaments à base de stupéfiants **" => :numero_stupefiants,
-	    "Besondere Angaben\n\n\nIndications particulières" => :indications_particulieres,
-	    "Zulassungsstatus\n\n\nStatut d'autorisation" => :statut_autorisation,
-	    "Befristet zugelassene Indikation(en) / Ablauf Datum\n\nIndication(s) autorisée(s) pour une durée limitée / date d’expiration" => :indications_duree_limitee
-	)
+    "Zulassungs-\nnummer\n\nN° d'autorisation" => :numero_autorisation,
+    "Dosisstärke-nummer \n\nN° de dosage" => :numero_dosage,
+    "Bezeichnung des Arzneimittels\n\n\nDénomination du médicament" => :denomination_medicament,
+    "Zulassungsinhaberin\n\n\nTitulaire de l'autorisation" => :titulaire_autorisation,
+    "Zulassungsart\n\n\nType d'autorisation" => :type_autorisation,
+    "Heilmittelcode\n\n\nCatégorie du médicament " => :categorie_medicament,
+    "Verfahren nach Art. 14 Abs. 1 Bst. abis-quater HMG\n\nProcédures selon l'art.14, al.1, let.abis-quater LPTh" => :procedure_art14,
+    "IT-Nummer\n\n\nNo IT " => :numero_it,
+    "ATC-Code\n\n\nCode ATC" => :code_atc,
+    "Erstzulassungs-datum Arzneimittel\nDate de première autorisation du médicament" => :date_premiere_autorisation,
+    "Zul.datum Dosisstärke \n\nDate d'autorisation du dosage" => :date_autorisation_dosage,
+    "Gültigkeitsdauer der Zulassung * \n\nDurée de validité de l'AMM *" => :duree_validite_amm,
+    "Abgabekategorie Dosisstärke \n\nCat. de remise du dosage" => :categorie_remise_dosage,
+    "Abgabekategorie Arzneimittel\n\nCat. de remise du médicament" => :categorie_remise_medicament,
+    "Wirkstoff(e)\n\n\nPrincipe(s) actif(s)" => :principes_actifs,
+    "Zusammensetzung\n\n\nComposition" => :composition,
+    "Volldeklaration rev. AMZV umgesetzt\n\nDéclaration complète OEMéd rév. implémentée" => :declaration_complete,
+    "Anwendungsgebiet Arzneimittel\n\n\nChamp d'application du médicament" => :champ_application_medicament,
+    "Anwendungsgebiet Dosisstärke\n\n\nChamp d'application du dosage" => :champ_application_dosage,
+    "Gentechnisch hergestellte Wirkstoffe\n\nPrincipes actifs produits par génie génétique" => :principes_actifs_genie_genetique,
+    "Kategorie bei Insulinen\n\n\nCatégorie en cas d'insuline" => :categorie_insuline,
+    "Verz. bei betäubungsmittelhaltigen Arzneimitteln **\n\nN° du tabl. Si médicaments à base de stupéfiants **" => :numero_stupefiants,
+    "Besondere Angaben\n\n\nIndications particulières" => :indications_particulieres,
+    "Zulassungsstatus\n\n\nStatut d'autorisation" => :statut_autorisation,
+    "Befristet zugelassene Indikation(en) / Ablauf Datum\n\nIndication(s) autorisée(s) pour une durée limitée / date d’expiration" => :indications_duree_limitee
+)
 	
-	# Utiliser avec votre dictionnaire
+# Utiliser avec votre dictionnaire
 safe_rename!(df_ListMedicIndic, rename_dict_2, "df_ListMedicIndic")
 
 rename_dict_5 = Dict(
@@ -491,7 +491,103 @@ for (cause, count) in sort(collect(pairs(causes_ListMedicIndic)), by=x->x[2], re
 end
 println("\nRépartition des causes de mortalité dans df_MedicDureeLimite_filtre:")
 total_MedicDureeLimite = nrow(df_MedicDureeLimite_filtre)
-for (cause, count) in sort(collect(pairs(causes_MedicDureeLimite)), by=x->x[2], rev=true)
-    pct = round(100 * count / total_MedicDureeLimite, digits=2)
-    println("  • $cause : $count médicaments ($pct%)")
+
+# Fonction pour extraire l'année de la date
+function get_year(row)
+    if !ismissing(row.date_premiere_autorisation)
+        return year(Date(row.date_premiere_autorisation))
+    elseif !ismissing(row.date_autorisation_dosage)
+        return year(Date(row.date_autorisation_dosage))
+    else
+        return missing
+    end
 end
+
+# CORRECTION 1: Harmoniser les colonnes avant la fusion
+common_cols = intersect(names(df_ListMedicIndic_filtre), names(df_MedicDureeLimite_filtre))
+df_ListMedicIndic_common = select(df_ListMedicIndic_filtre, common_cols)
+df_MedicDureeLimite_common = select(df_MedicDureeLimite_filtre, common_cols)
+
+# CORRECTION 2: Fusionner les DataFrames
+df_medicaments = vcat(df_ListMedicIndic_common, df_MedicDureeLimite_common)
+println("\n✓ Fusion des deux DataFrames terminée. Total: ", nrow(df_medicaments))
+
+# CORRECTION 3: Ajouter la colonne année
+df_medicaments.annee = [get_year(row) for row in eachrow(df_medicaments)]
+
+# CORRECTION 4: Filtrer les médicaments par année
+df_2000 = subset(df_medicaments, :annee => ByRow(x -> !ismissing(x) && x == 2000))
+df_2020 = subset(df_medicaments, :annee => ByRow(x -> !ismissing(x) && x == 2020))
+
+println("\nMédicaments validés en 2000: ", nrow(df_2000))
+println("Médicaments validés en 2020: ", nrow(df_2020))
+
+# CORRECTION 5: Fonction pour compter par catégorie
+function count_by_categorie(df, year_label)
+    return DataFrame(
+        annee = year_label,
+        cancer = count(x -> !ismissing(x) && x == "cancer", df.cause_mortalite),
+        appareil_circulatoire = count(x -> !ismissing(x) && x == "appareil_circulatoire", df.cause_mortalite),
+        maladie_infectieuses = count(x -> !ismissing(x) && x == "maladie_infectieuses", df.cause_mortalite),
+        appareil_respiratoire = count(x -> !ismissing(x) && x == "appareil_respiratoire", df.cause_mortalite),
+        autres = count(x -> !ismissing(x) && x == "autre", df.cause_mortalite),
+        total = nrow(df)
+    )
+end
+
+# CORRECTION 6: Créer les résumés
+df_2000_summary = count_by_categorie(df_2000, 2000)
+df_2020_summary = count_by_categorie(df_2020, 2020)
+
+# Afficher les résumés
+println("\n========================================")
+println("RÉSUMÉ DES MÉDICAMENTS VALIDÉS EN 2000")
+println("========================================")
+println(df_2000_summary)
+
+println("\n========================================")
+println("RÉSUMÉ DES MÉDICAMENTS VALIDÉS EN 2020")
+println("========================================")
+println(df_2020_summary)
+
+# CORRECTION 7: Créer un DataFrame combiné pour comparaison
+df_summary_combined = vcat(df_2000_summary, df_2020_summary)
+
+# CORRECTION 8: Exporter les fichiers
+# Créer les dossiers si nécessaire
+mkpath("output/df_2000")
+mkpath("output/df_2020")
+mkpath("output/comparaison")
+
+# Exporter les fichiers individuels
+CSV.write("output/df_2000/medicaments_2000_summary.csv", df_2000_summary)
+CSV.write("output/df_2020/medicaments_2020_summary.csv", df_2020_summary)
+CSV.write("output/comparaison/medicaments_2000_2020_combined.csv", df_summary_combined)
+
+# Optionnel: Exporter aussi les données détaillées
+CSV.write("output/df_2000/medicaments_2000_detail.csv", df_2000)
+CSV.write("output/df_2020/medicaments_2020_detail.csv", df_2020)
+
+println("\n✓ Fichiers exportés avec succès:")
+println("  - output/df_2000/medicaments_2000_summary.csv")
+println("  - output/df_2000/medicaments_2000_detail.csv")
+println("  - output/df_2020/medicaments_2020_summary.csv")
+println("  - output/df_2020/medicaments_2020_detail.csv")
+println("  - output/comparaison/medicaments_2000_2020_combined.csv")
+
+# BONUS: Afficher les pourcentages
+println("\n========================================")
+println("COMPARAISON EN POURCENTAGES")
+println("========================================")
+for year_df in [df_2000, df_2020]
+    year_val = first(year_df.annee)
+    total = nrow(year_df)
+    println("\nAnnée $year_val (Total: $total):")
+    
+    counts = countmap(skipmissing(year_df.cause_mortalite))
+    for (cause, count) in sort(collect(counts), by=x->x[2], rev=true)
+        pct = round(100 * count / total, digits=2)
+        println("  • $cause: $count médicaments ($pct%)")
+    end
+end
+println("========================================\n")

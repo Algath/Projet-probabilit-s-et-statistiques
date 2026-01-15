@@ -2,8 +2,7 @@ include("imports/imports_pca_global.jl")
 
 # ============================================
 # PCA PAR CAUSE DE DÉCÈS
-# Analyse complémentaire pour voir l'impact
-# des variables sur chaque cause spécifiquement
+# Analyse rigoureuse: PCA sur environnement, puis corrélation avec décès
 # ============================================
 
 println("\n" * "="^70)
@@ -11,7 +10,7 @@ println("ANALYSE PCA PAR CAUSE DE DÉCÈS")
 println("="^70)
 
 # ============================================
-# ÉTAPE 1: Charger les données (même préparation que pollution.jl)
+# ÉTAPE 1: Charger les données
 # ============================================
 
 function safe_rename!(df::DataFrame, old::String, new::String)
@@ -100,10 +99,10 @@ println("✓ Données chargées: $(nrow(df_combined)) années (2000-2020)")
 # ÉTAPE 2: Définir les analyses par cause
 # ============================================
 
-# Variables environnementales communes à toutes les analyses
+# Variables environnementales communes
 env_vars = ["rad_mean", "pm10_immission", "pm10_emission", "death_pm25"]
 
-# Définition des 4 analyses par cause
+# Définition des 4 causes
 causes = [
     (
         name = "Circulatoire",
@@ -132,21 +131,24 @@ causes = [
 ]
 
 # ============================================
-# ÉTAPE 3: PCA pour chaque cause
+# ÉTAPE 3: PCA pour chaque cause (SANS décès)
 # ============================================
 
 results_all = []
+correlation_results = []
 plots_biplot = []
 plots_loadings = []
-temporal_scores = Dict()  # Pour stocker les scores PC par année
+plots_loadings_pc2 = []
+plots_scatter = []
+temporal_scores = Dict()
 
 for cause in causes
     println("\n" * "-"^50)
     println("📊 Analyse: $(cause.name)")
     println("-"^50)
     
-    # Variables pour cette cause
-    vars_for_pca = [cause.death_var, cause.med_var, env_vars...]
+    # Variables pour PCA: médicaments + environnement (SANS décès)
+    vars_for_pca = [cause.med_var, env_vars...]
     
     # Extraire et standardiser
     local data_matrix = Matrix(df_combined[!, vars_for_pca])'
@@ -157,9 +159,10 @@ for cause in causes
     Y = predict(M, data_std)
     loadings_mat = loadings(M)
     vars_explained = principalvars(M)
-        # Stocker les scores temporels pour cette cause
+    
     temporal_scores[cause.name] = (Y=Y, vars_explained=vars_explained)
-        println("Variance expliquée: PC1=$(round(vars_explained[1]/sum(vars_explained)*100, digits=1))%, PC2=$(round(vars_explained[2]/sum(vars_explained)*100, digits=1))%")
+    
+    println("Variance expliquée: PC1=$(round(vars_explained[1]/sum(vars_explained)*100, digits=1))%, PC2=$(round(vars_explained[2]/sum(vars_explained)*100, digits=1))%")
     
     # Loadings
     println("\nLoadings PC1:")
@@ -179,10 +182,40 @@ for cause in causes
         ))
     end
     
-    # Biplot pour cette cause
+    # ============================================
+    # CORRÉLATIONS: Décès vs PC
+    # ============================================
+    
+    println("\n[CORRÉLATIONS DÉCÈS ↔ COMPOSANTES PRINCIPALES]")
+    
+    deaths = df_combined[!, cause.death_var]
+    
+    # Corrélation avec PC1
+    cor_pc1 = cor(deaths, Y[1, :])
+    r2_pc1 = cor_pc1^2
+    
+    # Corrélation avec PC2
+    cor_pc2 = cor(deaths, Y[2, :])
+    r2_pc2 = cor_pc2^2
+    
+    println("  Décès ↔ PC1: r=$(round(cor_pc1, digits=3)), R²=$(round(r2_pc1, digits=3))")
+    println("  Décès ↔ PC2: r=$(round(cor_pc2, digits=3)), R²=$(round(r2_pc2, digits=3))")
+    
+    push!(correlation_results, (
+        Cause = cause.name,
+        cor_PC1 = round(cor_pc1, digits=4),
+        R2_PC1 = round(r2_pc1, digits=4),
+        cor_PC2 = round(cor_pc2, digits=4),
+        R2_PC2 = round(r2_pc2, digits=4)
+    ))
+    
+    # ============================================
+    # BIPLOT
+    # ============================================
+    
     local p_biplot = plot(
-        xlabel="PC1 ($(round(vars_explained[1]/sum(vars_explained)*100, digits=1))%)",
-        ylabel="PC2 ($(round(vars_explained[2]/sum(vars_explained)*100, digits=1))%)",
+        xlabel="PC1 ($(round(vars_explained[1]/sum(vars_explained)*100, digits=1))%) | Décès R²=$(round(r2_pc1, digits=2))",
+        ylabel="PC2 ($(round(vars_explained[2]/sum(vars_explained)*100, digits=1))%) | Décès R²=$(round(r2_pc2, digits=2))",
         title="PCA - Décès $(cause.name)",
         size=(600, 500),
         legend=:outertopright,
@@ -207,7 +240,6 @@ for cause in causes
     # Vecteurs variables
     scale = 2
     var_colors = Dict(
-        cause.death_var => :red,
         cause.med_var => :blue,
         "rad_mean" => :orange,
         "pm10_immission" => :purple,
@@ -223,7 +255,7 @@ for cause in causes
             linewidth=2,
             label=""
         )
-        short_name = replace(v, "death_" => "D:", "med_" => "M:", "_mean" => "", "pm10_" => "PM10:")
+        short_name = replace(v, "med_" => "M:", "_mean" => "", "pm10_" => "PM10:")
         annotate!(p_biplot, 
             loadings_mat[i,1]*scale*1.15, 
             loadings_mat[i,2]*scale*1.15,
@@ -233,12 +265,15 @@ for cause in causes
     
     push!(plots_biplot, p_biplot)
     
-    # Bar plot des loadings PC1
+    # ============================================
+    # BAR PLOT des loadings PC1
+    # ============================================
+    
     sorted_idx = sortperm(loadings_mat[:, 1])
     sorted_loadings = loadings_mat[sorted_idx, 1]
     sorted_names = [vars_for_pca[i] for i in sorted_idx]
     colors = [get(var_colors, n, :gray) for n in sorted_names]
-    short_names = [replace(replace(replace(n, "death_" => "Décès: "), "med_" => "Méd: "), "_mean" => "") for n in sorted_names]
+    short_names = [replace(replace(n, "med_" => "Méd: "), "_mean" => "") for n in sorted_names]
     short_names = [replace(n, "pm10_immission" => "PM10 immission") for n in short_names]
     short_names = [replace(n, "pm10_emission" => "PM10 émission") for n in short_names]
     
@@ -246,7 +281,7 @@ for cause in causes
         orientation=:horizontal,
         yticks=(1:length(short_names), short_names),
         xlabel="Loading PC1",
-        title="$(cause.name) - Contribution à PC1",
+        title="$(cause.name) - Contribution à PC1\nDécès R²=$(round(r2_pc1, digits=2))",
         color=colors,
         legend=false,
         size=(550, 400),
@@ -257,28 +292,109 @@ for cause in causes
     vline!(p_loading, [0], color=:black, linewidth=1, label="")
     
     push!(plots_loadings, p_loading)
+    
+    # ============================================
+    # BAR PLOT des loadings PC2
+    # ============================================
+    
+    sorted_idx_pc2 = sortperm(loadings_mat[:, 2])
+    sorted_loadings_pc2 = loadings_mat[sorted_idx_pc2, 2]
+    sorted_names_pc2 = [vars_for_pca[i] for i in sorted_idx_pc2]
+    colors_pc2 = [get(var_colors, n, :gray) for n in sorted_names_pc2]
+    short_names_pc2 = [replace(replace(n, "med_" => "Méd: "), "_mean" => "") for n in sorted_names_pc2]
+    short_names_pc2 = [replace(n, "pm10_immission" => "PM10 immission") for n in short_names_pc2]
+    short_names_pc2 = [replace(n, "pm10_emission" => "PM10 émission") for n in short_names_pc2]
+    
+    p_loading_pc2 = bar(sorted_loadings_pc2,
+        orientation=:horizontal,
+        yticks=(1:length(short_names_pc2), short_names_pc2),
+        xlabel="Loading PC2",
+        title="$(cause.name) - Contribution à PC2\nDécès R²=$(round(r2_pc2, digits=2))",
+        color=colors_pc2,
+        legend=false,
+        size=(550, 400),
+        left_margin=15Plots.mm,
+        right_margin=10Plots.mm,
+        xlims=(-0.8, 0.8)
+    )
+    vline!(p_loading_pc2, [0], color=:black, linewidth=1, label="")
+    
+    push!(plots_loadings_pc2, p_loading_pc2)
+    
+    # ============================================
+    # SCATTER: Décès vs PC1
+    # ============================================
+    
+    years = df_combined.year
+    
+    p_scatter = scatter(Y[1, :], deaths,
+        xlabel="Score PC1 (profil environnemental)",
+        ylabel="Nombre de décès",
+        title="$(cause.name): Décès vs PC1\nR²=$(round(r2_pc1, digits=3))",
+        label="",
+        color=cause.color,
+        markersize=6,
+        alpha=0.7,
+        size=(500, 400),
+        left_margin=10Plots.mm
+    )
+    
+    # Ligne de tendance
+    x_vals = Y[1, :]
+    coeffs = [ones(length(x_vals)) x_vals] \ deaths
+    y_pred = coeffs[1] .+ coeffs[2] .* x_vals
+    plot!(p_scatter, x_vals, y_pred, 
+        color=cause.color, 
+        linewidth=2, 
+        linestyle=:dash,
+        label="Tendance linéaire"
+    )
+    
+    # Annoter années clés
+    for (i, yr) in enumerate(years)
+        if yr in [2000, 2010, 2020]
+            annotate!(p_scatter, Y[1,i], deaths[i], text(string(yr), 7, :top))
+        end
+    end
+    
+    push!(plots_scatter, p_scatter)
 end
 
 # ============================================
 # ÉTAPE 4: Sauvegarder les résultats
 # ============================================
 
-# CSV des loadings par cause
+# CSV des loadings et corrélations
 df_results = DataFrame(results_all)
-CSV.write("output/pca_cause/pca_par_cause_loadings.csv", df_results)
-println("\n✓ Loadings sauvegardés dans output/pca_cause/pca_par_cause_loadings.csv")
+df_correlations = DataFrame(correlation_results)
 
-# Graphique combiné des biplots
+CSV.write("output/pca_cause/pca_par_cause_loadings.csv", df_results)
+CSV.write("output/pca_cause/pca_correlations_deaths_vs_pc.csv", df_correlations)
+
+println("\n✓ Loadings sauvegardés dans output/pca_cause/pca_par_cause_loadings.csv")
+println("✓ Corrélations sauvegardées dans output/pca_cause/pca_correlations_deaths_vs_pc.csv")
+
+# Graphiques combinés
 p_biplots_combined = plot(plots_biplot..., layout=(2, 2), size=(1200, 1000))
 savefig(p_biplots_combined, "output/pca_cause/pca_par_cause_biplots.png")
 println("✓ Biplots sauvegardés dans output/pca_cause/pca_par_cause_biplots.png")
 
-# Graphique combiné des loadings
 p_loadings_combined = plot(plots_loadings..., layout=(2, 2), size=(1000, 800))
-savefig(p_loadings_combined, "output/pca_cause/pca_par_cause_loadings.png")
-println("✓ Loadings bars sauvegardés dans output/pca_cause/pca_par_cause_loadings.png")
+savefig(p_loadings_combined, "output/pca_cause/pca_par_cause_loadings_pc1.png")
+println("✓ Loadings PC1 sauvegardés dans output/pca_cause/pca_par_cause_loadings_pc1.png")
 
-# Graphique évolution temporelle PC1 pour chaque cause
+p_loadings_pc2_combined = plot(plots_loadings_pc2..., layout=(2, 2), size=(1000, 800))
+savefig(p_loadings_pc2_combined, "output/pca_cause/pca_par_cause_loadings_pc2.png")
+println("✓ Loadings PC2 sauvegardés dans output/pca_cause/pca_par_cause_loadings_pc2.png")
+
+p_scatter_combined = plot(plots_scatter..., layout=(2, 2), size=(1000, 800))
+savefig(p_scatter_combined, "output/pca_cause/pca_deaths_vs_pc1_scatter.png")
+println("✓ Scatter décès vs PC1 sauvegardé dans output/pca_cause/pca_deaths_vs_pc1_scatter.png")
+
+# ============================================
+# Évolution temporelle PC1 pour chaque cause
+# ============================================
+
 years = df_combined.year
 p_temporal = plot(
     xlabel="Année",
@@ -307,7 +423,7 @@ hline!(p_temporal, [0], color=:gray, linestyle=:dash, label="", linewidth=1)
 savefig(p_temporal, "output/pca_cause/pca_par_cause_temporal.png")
 println("✓ Évolution temporelle sauvegardée dans output/pca_cause/pca_par_cause_temporal.png")
 
-# Graphique évolution temporelle PC1 + PC2 (subplots par cause)
+# Évolution temporelle PC1 + PC2 (subplots par cause)
 plots_temporal_detail = []
 for cause in causes
     scores = temporal_scores[cause.name]
@@ -347,7 +463,6 @@ comparison_data = []
 for var in comparison_vars
     row = Dict{String, Any}("Variable" => var)
     for cause in causes
-        # Trouver le loading pour cette variable et cette cause
         subset = filter(r -> r.Cause == cause.name && r.Variable == var, df_results)
         if nrow(subset) > 0
             row[cause.name] = subset[1, :PC1]
@@ -396,7 +511,32 @@ println("✓ Heatmap de comparaison sauvegardée dans output/pca_cause/pca_par_c
 # ============================================
 
 println("\n" * "="^70)
-println("RÉSUMÉ: QUELLE VARIABLE IMPACTE QUELLE CAUSE ?")
+println("RÉSUMÉ: CORRÉLATIONS DÉCÈS ↔ PROFILS ENVIRONNEMENTAUX")
+println("="^70)
+
+println("\nTableau des corrélations:")
+println(df_correlations)
+
+println("\n" * "="^70)
+println("INTERPRÉTATION")
+println("="^70)
+
+for row in eachrow(df_correlations)
+    println("\n🔹 $(row.Cause):")
+    println("   • PC1 explique $(round(row.R2_PC1*100, digits=1))% de la variance des décès")
+    if abs(row.cor_PC1) > 0.7
+        direction = row.cor_PC1 > 0 ? "positivement" : "négativement"
+        println("   • Corrélation FORTE $direction (r=$(row.cor_PC1))")
+    elseif abs(row.cor_PC1) > 0.4
+        direction = row.cor_PC1 > 0 ? "positivement" : "négativement"
+        println("   • Corrélation MODÉRÉE $direction (r=$(row.cor_PC1))")
+    else
+        println("   • Corrélation FAIBLE avec PC1 (r=$(row.cor_PC1))")
+    end
+end
+
+println("\n" * "="^70)
+println("QUELLE VARIABLE IMPACTE QUELLE CAUSE ?")
 println("="^70)
 
 for cause in causes
@@ -421,10 +561,14 @@ end
 println("\n" * "="^70)
 println("FICHIERS GÉNÉRÉS")
 println("="^70)
-println("  • pca_par_cause_biplots.png            - Biplots pour chaque cause")
-println("  • pca_par_cause_loadings.png           - Barres de contribution PC1")
+println("  • pca_par_cause_biplots.png            - Biplots avec R² décès")
+println("  • pca_par_cause_loadings_pc1.png       - Barres de contribution PC1")
+println("  • pca_par_cause_loadings_pc2.png       - Barres de contribution PC2")
+println("  • pca_deaths_vs_pc1_scatter.png        - Scatter décès vs PC1 (R²)")
 println("  • pca_par_cause_temporal.png           - Évolution PC1 toutes causes")
 println("  • pca_par_cause_temporal_detail.png    - Évolution PC1+PC2 par cause")
 println("  • pca_par_cause_heatmap_comparison.png - Comparaison entre causes")
 println("  • pca_par_cause_loadings.csv           - Loadings numériques")
+println("  • pca_correlations_deaths_vs_pc.csv    - Corrélations décès ↔ PC")
 println("  • pca_par_cause_comparison.csv         - Tableau comparatif")
+println("="^70)
